@@ -1,0 +1,15 @@
+{
+  "type" : "record",
+  "name" : "VoidPaymentInput",
+  "namespace" : "com.arcadiaeditions.payments.processing.events.avro",
+  "fields" : [ {
+    "name" : "paymentId",
+    "type" : "string"
+  }, {
+    "name" : "orderId",
+    "type" : "string"
+  }, {
+    "name" : "reason",
+    "type" : "string"
+  } ]
+}

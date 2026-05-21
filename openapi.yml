@@ -1,0 +1,92 @@
+openapi: 3.0.1
+info:
+  title: "Arcadia Editions - Payments Processing"
+  version: 0.0.1
+  description: "Arcadia Editions - Payments Processing"
+  contact:
+    email: email@domain.com
+servers:
+  - description: localhost
+    url: http://localhost:8080/api
+  - description: custom
+    url: "{protocol}://{server}/{path}"
+    variables:
+      protocol:
+        enum: ['http', 'https']
+        default: 'http'
+      server:
+        default: 'localhost:8080'
+      path:
+        default: 'api'
+tags:
+  - name: "Default"
+  - name: "PaymentsProcessing"
+
+
+paths:
+
+components:
+  schemas: {}
+
+    Page:
+      type: object
+      required:
+        - "content"
+        - "totalElements"
+        - "totalPages"
+        - "size"
+        - "number"
+      properties:
+        number:
+          type: integer
+          minimum: 0
+        numberOfElements:
+          type: integer
+          minimum: 0
+        size:
+          type: integer
+          minimum: 0
+          maximum: 200
+          multipleOf: 25
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+
+  parameters:
+    page:
+      name: page
+      in: query
+      description: The number of results page
+      schema:
+        type: integer
+        format: int32
+        default: 0
+    limit:
+      name: limit
+      in: query
+      description: The number of results in a single page
+      schema:
+        type: integer
+        format: int32
+        default: 20
+    sort:
+      name: sort
+      in: query
+      description: Sort results by field name and direction (asc or desc)
+      schema:
+        type: array
+        items:
+          type: string
+
+  securitySchemes:
+    basicAuth:     # <-- arbitrary name for the security scheme
+      type: http
+      scheme: basic
+    bearerAuth:     # <-- arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+security:
+  - basicAuth: []  # <-- use the same name here
+  - bearerAuth: []  # <-- use the same name here

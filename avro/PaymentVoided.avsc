@@ -1,0 +1,24 @@
+{
+  "type" : "record",
+  "name" : "PaymentVoided",
+  "namespace" : "com.arcadiaeditions.payments.processing.events.avro",
+  "fields" : [ {
+    "name" : "paymentId",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "orderId",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "customerId",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "providerReference",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "reason",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "voidedAt",
+    "type" : [ "null", "string" ]
+  } ]
+}

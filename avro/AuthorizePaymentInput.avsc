@@ -1,0 +1,21 @@
+{
+  "type" : "record",
+  "name" : "AuthorizePaymentInput",
+  "namespace" : "com.arcadiaeditions.payments.processing.events.avro",
+  "fields" : [ {
+    "name" : "orderId",
+    "type" : "string"
+  }, {
+    "name" : "customerId",
+    "type" : "string"
+  }, {
+    "name" : "amount",
+    "type" : "double"
+  }, {
+    "name" : "currency",
+    "type" : "string"
+  }, {
+    "name" : "paymentMethodId",
+    "type" : "string"
+  } ]
+}

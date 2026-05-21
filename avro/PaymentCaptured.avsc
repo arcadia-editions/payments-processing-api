@@ -1,0 +1,27 @@
+{
+  "type" : "record",
+  "name" : "PaymentCaptured",
+  "namespace" : "com.arcadiaeditions.payments.processing.events.avro",
+  "fields" : [ {
+    "name" : "paymentId",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "orderId",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "customerId",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "amount",
+    "type" : [ "null", "double" ]
+  }, {
+    "name" : "currency",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "providerReference",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "capturedAt",
+    "type" : [ "null", "string" ]
+  } ]
+}

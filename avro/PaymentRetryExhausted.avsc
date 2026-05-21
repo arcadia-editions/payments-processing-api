@@ -1,0 +1,24 @@
+{
+  "type" : "record",
+  "name" : "PaymentRetryExhausted",
+  "namespace" : "com.arcadiaeditions.payments.processing.events.avro",
+  "fields" : [ {
+    "name" : "paymentId",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "orderId",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "customerId",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "attemptCount",
+    "type" : [ "null", "int" ]
+  }, {
+    "name" : "reason",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "exhaustedAt",
+    "type" : [ "null", "string" ]
+  } ]
+}

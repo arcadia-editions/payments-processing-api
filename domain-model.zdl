@@ -1,0 +1,179 @@
+config {
+    title "Arcadia Editions - Payments Processing"
+    basePackage "com.arcadiaeditions.payments.processing"
+    persistence jpa
+
+    plugins {
+        /** Generates an AsyncAPI v3 specification from this ZDL model. */
+        ZDLToAsyncAPIPlugin {
+            schemaFormat avro
+            idType integer
+            idTypeFormat int64
+            avroPackage com.arcadiaeditions.payments.processing.events.avro
+            includeCloudEventsHeaders true
+            includeKafkaCommonHeaders true
+            targetFile "./asyncapi.yml"
+        }
+        /** Generates an OpenAPI 3.0 specification from this ZDL model. */
+        ZDLToOpenAPIPlugin {
+            idType integer
+            idTypeFormat int64
+            targetFile "./openapi.yml"
+        }
+    }
+}
+
+@aggregate
+@lifecycle(field: status, initial: AUTHORIZATION_REQUESTED)
+entity Payment {
+    paymentId String required unique
+    orderId String required unique
+    customerId String required
+    amount BigDecimal required
+    currency String required
+    status PaymentStatus required
+    providerReference String
+    attemptCount Integer required
+    authorizedAt Instant
+    declinedAt Instant
+    failedAt Instant
+    capturedAt Instant
+    voidedAt Instant
+    failureReason String
+}
+
+enum PaymentStatus {
+    AUTHORIZATION_REQUESTED
+    AUTHORIZED
+    DECLINED
+    FAILED
+    RETRY_EXHAUSTED
+    CAPTURED
+    VOIDED
+}
+
+input AuthorizePaymentInput {
+    orderId String required
+    customerId String required
+    amount BigDecimal required
+    currency String required
+    paymentMethodId String required
+}
+
+input RetryPaymentInput {
+    paymentId String required
+    orderId String required
+}
+
+input CapturePaymentInput {
+    paymentId String required
+    orderId String required
+}
+
+input VoidPaymentInput {
+    paymentId String required
+    orderId String required
+    reason String required
+}
+
+@rest("/payments")
+service PaymentsProcessingService for (Payment) {
+
+    @asyncapi({ channel: "OrderCreatedEventsChannel", topic: "orders-checkout.events.order-created" })
+    @transition(to: AUTHORIZATION_REQUESTED)
+    authorizePayment(AuthorizePaymentInput) Payment withEvents PaymentAuthorized PaymentDeclined PaymentFailed
+
+    @asyncapi({ channel: "PaymentFailedEventsChannel", topic: "payments-processing.events.payment-failed" })
+    @transition(from: FAILED, to: AUTHORIZATION_REQUESTED)
+    retryPayment(RetryPaymentInput) Payment withEvents PaymentRetried PaymentRetryExhausted
+
+    @asyncapi({ channel: "FulfillmentScheduledEventsChannel", topic: "fulfillment-shipping.events.fulfillment-scheduled" })
+    @transition(from: AUTHORIZED, to: CAPTURED)
+    capturePayment(CapturePaymentInput) Payment withEvents PaymentCaptured PaymentCaptureFailed
+
+    @asyncapi({ channel: "FulfillmentFailedEventsChannel", topic: "fulfillment-shipping.events.fulfillment-failed" })
+    @asyncapi({ channel: "PaymentCaptureFailedEventsChannel", topic: "payments-processing.events.payment-capture-failed" })
+    @transition(from: [AUTHORIZED, AUTHORIZATION_REQUESTED, FAILED], to: VOIDED)
+    voidPayment(VoidPaymentInput) Payment withEvents PaymentVoided
+}
+
+@asyncapi({ channel: "PaymentAuthorizedEventsChannel", topic: "payments-processing.events.payment-authorized" })
+event PaymentAuthorized {
+    paymentId String
+    orderId String
+    customerId String
+    amount BigDecimal
+    currency String
+    providerReference String
+    authorizedAt Instant
+}
+
+@asyncapi({ channel: "PaymentDeclinedEventsChannel", topic: "payments-processing.events.payment-declined" })
+event PaymentDeclined {
+    paymentId String
+    orderId String
+    customerId String
+    amount BigDecimal
+    currency String
+    reason String
+    declinedAt Instant
+}
+
+@asyncapi({ channel: "PaymentFailedEventsChannel", topic: "payments-processing.events.payment-failed" })
+event PaymentFailed {
+    paymentId String
+    orderId String
+    customerId String
+    attemptCount Integer
+    reason String
+    failedAt Instant
+}
+
+@asyncapi({ channel: "PaymentRetriedEventsChannel", topic: "payments-processing.events.payment-retried" })
+event PaymentRetried {
+    paymentId String
+    orderId String
+    customerId String
+    attemptCount Integer
+    retriedAt Instant
+}
+
+@asyncapi({ channel: "PaymentRetryExhaustedEventsChannel", topic: "payments-processing.events.payment-retry-exhausted" })
+event PaymentRetryExhausted {
+    paymentId String
+    orderId String
+    customerId String
+    attemptCount Integer
+    reason String
+    exhaustedAt Instant
+}
+
+@asyncapi({ channel: "PaymentCapturedEventsChannel", topic: "payments-processing.events.payment-captured" })
+event PaymentCaptured {
+    paymentId String
+    orderId String
+    customerId String
+    amount BigDecimal
+    currency String
+    providerReference String
+    capturedAt Instant
+}
+
+@asyncapi({ channel: "PaymentCaptureFailedEventsChannel", topic: "payments-processing.events.payment-capture-failed" })
+event PaymentCaptureFailed {
+    paymentId String
+    orderId String
+    customerId String
+    reason String
+    failedAt Instant
+}
+
+@asyncapi({ channel: "PaymentVoidedEventsChannel", topic: "payments-processing.events.payment-voided" })
+event PaymentVoided {
+    paymentId String
+    orderId String
+    customerId String
+    providerReference String
+    reason String
+    voidedAt Instant
+}
