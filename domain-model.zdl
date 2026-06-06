@@ -1,4 +1,5 @@
 config {
+    id "urn:com.arcadiaeditions.payments.processing"
     title "Arcadia Editions - Payments Processing"
     basePackage "com.arcadiaeditions.payments.processing"
     persistence jpa
@@ -14,6 +15,11 @@ config {
             includeKafkaCommonHeaders true
             targetFile "./asyncapi.yml"
         }
+        ZDLToAsyncAPIClientPlugin {
+            id "urn:com.arcadiaeditions.payments.processing:client"
+            title "Arcadia Editions - Payments Processing - AsyncAPI Client"
+            targetFile "./asyncapi-client.yml"
+        }
         /** Generates an OpenAPI 3.0 specification from this ZDL model. */
         ZDLToOpenAPIPlugin {
             idType integer
@@ -21,6 +27,11 @@ config {
             targetFile "./openapi.yml"
         }
     }
+}
+
+apis {
+    asyncapi client OrdersCheckoutApi "https://raw.githubusercontent.com/arcadia-editions/orders-checkout-api/main/asyncapi.yml"
+    asyncapi client FulfillmentShippingApi "https://raw.githubusercontent.com/arcadia-editions/fulfillment-shipping-api/main/asyncapi.yml"
 }
 
 @aggregate
@@ -79,25 +90,25 @@ input VoidPaymentInput {
 @rest("/payments")
 service PaymentsProcessingService for (Payment) {
 
-    @asyncapi({ channel: "OrderCreatedEventsChannel", topic: "orders-checkout.events.order-created" })
+    @asyncapi(api: OrdersCheckoutApi, channel: OrderCreatedChannel)
     @transition(to: AUTHORIZATION_REQUESTED)
     authorizePayment(AuthorizePaymentInput) Payment withEvents PaymentAuthorized PaymentDeclined PaymentFailed
 
-    @asyncapi({ channel: "PaymentFailedEventsChannel", topic: "payments-processing.events.payment-failed" })
+    @asyncapi(channel: PaymentFailedChannel)
     @transition(from: FAILED, to: AUTHORIZATION_REQUESTED)
     retryPayment(RetryPaymentInput) Payment withEvents PaymentRetried PaymentRetryExhausted
 
-    @asyncapi({ channel: "FulfillmentScheduledEventsChannel", topic: "fulfillment-shipping.events.fulfillment-scheduled" })
+    @asyncapi(api: FulfillmentShippingApi, channel: FulfillmentScheduledChannel)
     @transition(from: AUTHORIZED, to: CAPTURED)
     capturePayment(CapturePaymentInput) Payment withEvents PaymentCaptured PaymentCaptureFailed
 
-    @asyncapi({ channel: "FulfillmentFailedEventsChannel", topic: "fulfillment-shipping.events.fulfillment-failed" })
-    @asyncapi({ channel: "PaymentCaptureFailedEventsChannel", topic: "payments-processing.events.payment-capture-failed" })
+    @asyncapi(api: FulfillmentShippingApi, channel: FulfillmentFailedChannel)
+    @asyncapi(channel: PaymentCaptureFailedChannel)
     @transition(from: [AUTHORIZED, AUTHORIZATION_REQUESTED, FAILED], to: VOIDED)
     voidPayment(VoidPaymentInput) Payment withEvents PaymentVoided
 }
 
-@asyncapi({ channel: "PaymentAuthorizedEventsChannel", topic: "payments-processing.events.payment-authorized" })
+@asyncapi({ channel: "PaymentAuthorizedChannel", topic: "payments-processing.events.payment-authorized" })
 event PaymentAuthorized {
     paymentId String
     orderId String
@@ -108,7 +119,7 @@ event PaymentAuthorized {
     authorizedAt Instant
 }
 
-@asyncapi({ channel: "PaymentDeclinedEventsChannel", topic: "payments-processing.events.payment-declined" })
+@asyncapi({ channel: "PaymentDeclinedChannel", topic: "payments-processing.events.payment-declined" })
 event PaymentDeclined {
     paymentId String
     orderId String
@@ -119,7 +130,7 @@ event PaymentDeclined {
     declinedAt Instant
 }
 
-@asyncapi({ channel: "PaymentFailedEventsChannel", topic: "payments-processing.events.payment-failed" })
+@asyncapi({ channel: "PaymentFailedChannel", topic: "payments-processing.events.payment-failed" })
 event PaymentFailed {
     paymentId String
     orderId String
@@ -129,7 +140,7 @@ event PaymentFailed {
     failedAt Instant
 }
 
-@asyncapi({ channel: "PaymentRetriedEventsChannel", topic: "payments-processing.events.payment-retried" })
+@asyncapi({ channel: "PaymentRetriedChannel", topic: "payments-processing.events.payment-retried" })
 event PaymentRetried {
     paymentId String
     orderId String
@@ -138,7 +149,7 @@ event PaymentRetried {
     retriedAt Instant
 }
 
-@asyncapi({ channel: "PaymentRetryExhaustedEventsChannel", topic: "payments-processing.events.payment-retry-exhausted" })
+@asyncapi({ channel: "PaymentRetryExhaustedChannel", topic: "payments-processing.events.payment-retry-exhausted" })
 event PaymentRetryExhausted {
     paymentId String
     orderId String
@@ -148,7 +159,7 @@ event PaymentRetryExhausted {
     exhaustedAt Instant
 }
 
-@asyncapi({ channel: "PaymentCapturedEventsChannel", topic: "payments-processing.events.payment-captured" })
+@asyncapi({ channel: "PaymentCapturedChannel", topic: "payments-processing.events.payment-captured" })
 event PaymentCaptured {
     paymentId String
     orderId String
@@ -159,7 +170,7 @@ event PaymentCaptured {
     capturedAt Instant
 }
 
-@asyncapi({ channel: "PaymentCaptureFailedEventsChannel", topic: "payments-processing.events.payment-capture-failed" })
+@asyncapi({ channel: "PaymentCaptureFailedChannel", topic: "payments-processing.events.payment-capture-failed" })
 event PaymentCaptureFailed {
     paymentId String
     orderId String
@@ -168,7 +179,7 @@ event PaymentCaptureFailed {
     failedAt Instant
 }
 
-@asyncapi({ channel: "PaymentVoidedEventsChannel", topic: "payments-processing.events.payment-voided" })
+@asyncapi({ channel: "PaymentVoidedChannel", topic: "payments-processing.events.payment-voided" })
 event PaymentVoided {
     paymentId String
     orderId String
