@@ -1,0 +1,29 @@
+asyncapi: 3.0.0
+id: urn:com.arcadiaeditions:payments:processing:asyncapi:client
+info:
+  title: "Arcadia Editions - Payments Processing - AsyncAPI Client"
+  version: 1.0.0
+  description: "Consumed AsyncAPI channels for Arcadia Editions - Payments Processing."
+
+channels:
+
+  order-created-event-v1:
+    $ref: 'https://raw.githubusercontent.com/arcadia-editions/orders-checkout-api/main/asyncapi.yml#/channels/order-created-event-v1'
+
+  fulfillment-scheduled-event-v1:
+    $ref: 'https://raw.githubusercontent.com/arcadia-editions/fulfillment-shipping-api/main/asyncapi.yml#/channels/fulfillment-scheduled-event-v1'
+
+
+
+operations:
+
+  onOrderCreatedEventV1:
+    action: receive
+    channel:
+      $ref: '#/channels/order-created-event-v1'
+
+  onFulfillmentScheduledEventV1:
+    action: receive
+    channel:
+      $ref: '#/channels/fulfillment-scheduled-event-v1'
+

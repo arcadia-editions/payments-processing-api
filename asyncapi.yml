@@ -1,4 +1,5 @@
 asyncapi: 3.0.0
+id: urn:com.arcadiaeditions:payments:processing:asyncapi
 info:
   title: "Arcadia Editions - Payments Processing"
   version: 0.0.1
@@ -9,148 +10,116 @@ info:
 defaultContentType: application/json
 
 channels:
-  OrderCreatedEventsChannel:
-    address: "orders-checkout.events.order-created"
-    messages:
-      AuthorizePaymentInputMessage:
-        $ref: '#/components/messages/AuthorizePaymentInputMessage'
-  PaymentFailedEventsChannel:
-    address: "payments-processing.events.payment-failed"
+  payment-failed-event-v1:
+    address: "payments-processing.payment-failed.event.avro.v1"
     messages:
       RetryPaymentInputMessage:
         $ref: '#/components/messages/RetryPaymentInputMessage'
       PaymentFailedMessage:
         $ref: '#/components/messages/PaymentFailedMessage'
-  FulfillmentScheduledEventsChannel:
-    address: "fulfillment-shipping.events.fulfillment-scheduled"
-    messages:
-      CapturePaymentInputMessage:
-        $ref: '#/components/messages/CapturePaymentInputMessage'
-  PaymentCaptureFailedEventsChannel:
-    address: "payments-processing.events.payment-capture-failed"
+  payment-capture-failed-event-v1:
+    address: "payments-processing.payment-capture-failed.event.avro.v1"
     messages:
       VoidPaymentInputMessage:
         $ref: '#/components/messages/VoidPaymentInputMessage'
       PaymentCaptureFailedMessage:
         $ref: '#/components/messages/PaymentCaptureFailedMessage'
-  PaymentAuthorizedEventsChannel:
-    address: "payments-processing.events.payment-authorized"
+  payment-authorized-event-v1:
+    address: "payments-processing.payment-authorized.event.avro.v1"
     messages:
       PaymentAuthorizedMessage:
         $ref: '#/components/messages/PaymentAuthorizedMessage'
-  PaymentDeclinedEventsChannel:
-    address: "payments-processing.events.payment-declined"
+  payment-declined-event-v1:
+    address: "payments-processing.payment-declined.event.avro.v1"
     messages:
       PaymentDeclinedMessage:
         $ref: '#/components/messages/PaymentDeclinedMessage'
-  PaymentRetriedEventsChannel:
-    address: "payments-processing.events.payment-retried"
+  payment-retried-event-v1:
+    address: "payments-processing.payment-retried.event.avro.v1"
     messages:
       PaymentRetriedMessage:
         $ref: '#/components/messages/PaymentRetriedMessage'
-  PaymentRetryExhaustedEventsChannel:
-    address: "payments-processing.events.payment-retry-exhausted"
+  payment-retry-exhausted-event-v1:
+    address: "payments-processing.payment-retry-exhausted.event.avro.v1"
     messages:
       PaymentRetryExhaustedMessage:
         $ref: '#/components/messages/PaymentRetryExhaustedMessage'
-  PaymentCapturedEventsChannel:
-    address: "payments-processing.events.payment-captured"
+  payment-captured-event-v1:
+    address: "payments-processing.payment-captured.event.avro.v1"
     messages:
       PaymentCapturedMessage:
         $ref: '#/components/messages/PaymentCapturedMessage'
-  PaymentVoidedEventsChannel:
-    address: "payments-processing.events.payment-voided"
+  payment-voided-event-v1:
+    address: "payments-processing.payment-voided.event.avro.v1"
     messages:
       PaymentVoidedMessage:
         $ref: '#/components/messages/PaymentVoidedMessage'
 
 operations:
-  doAuthorizePayment:
-    action: receive
-    tags:
-      - name: PaymentsProcessing
-    channel:
-      $ref: '#/channels/OrderCreatedEventsChannel'
   doRetryPayment:
     action: receive
     tags:
       - name: PaymentsProcessing
     channel:
-      $ref: '#/channels/PaymentFailedEventsChannel'
-  doCapturePayment:
-    action: receive
-    tags:
-      - name: PaymentsProcessing
-    channel:
-      $ref: '#/channels/FulfillmentScheduledEventsChannel'
+      $ref: '#/channels/payment-failed-event-v1'
   doVoidPayment:
     action: receive
     tags:
       - name: PaymentsProcessing
     channel:
-      $ref: '#/channels/PaymentCaptureFailedEventsChannel'
+      $ref: '#/channels/payment-capture-failed-event-v1'
   onPaymentAuthorized:
     action: send
     tags:
       - name: PaymentsProcessing
     channel:
-      $ref: '#/channels/PaymentAuthorizedEventsChannel'
+      $ref: '#/channels/payment-authorized-event-v1'
   onPaymentDeclined:
     action: send
     tags:
       - name: PaymentsProcessing
     channel:
-      $ref: '#/channels/PaymentDeclinedEventsChannel'
+      $ref: '#/channels/payment-declined-event-v1'
   onPaymentFailed:
     action: send
     tags:
       - name: PaymentsProcessing
     channel:
-      $ref: '#/channels/PaymentFailedEventsChannel'
+      $ref: '#/channels/payment-failed-event-v1'
   onPaymentRetried:
     action: send
     tags:
       - name: PaymentsProcessing
     channel:
-      $ref: '#/channels/PaymentRetriedEventsChannel'
+      $ref: '#/channels/payment-retried-event-v1'
   onPaymentRetryExhausted:
     action: send
     tags:
       - name: PaymentsProcessing
     channel:
-      $ref: '#/channels/PaymentRetryExhaustedEventsChannel'
+      $ref: '#/channels/payment-retry-exhausted-event-v1'
   onPaymentCaptured:
     action: send
     tags:
       - name: PaymentsProcessing
     channel:
-      $ref: '#/channels/PaymentCapturedEventsChannel'
+      $ref: '#/channels/payment-captured-event-v1'
   onPaymentCaptureFailed:
     action: send
     tags:
       - name: PaymentsProcessing
     channel:
-      $ref: '#/channels/PaymentCaptureFailedEventsChannel'
+      $ref: '#/channels/payment-capture-failed-event-v1'
   onPaymentVoided:
     action: send
     tags:
       - name: PaymentsProcessing
     channel:
-      $ref: '#/channels/PaymentVoidedEventsChannel'
+      $ref: '#/channels/payment-voided-event-v1'
 
 
 components:
   messages:
-    AuthorizePaymentInputMessage:
-      name: AuthorizePaymentInputMessage
-      title: ""
-      summary: ""
-      traits:
-        - $ref: '#/components/messageTraits/CommonHeaders'
-      payload:
-        schemaFormat: application/vnd.apache.avro+json;version=1.9.0
-        schema:
-          $ref: "avro/AuthorizePaymentInput.avsc"
     RetryPaymentInputMessage:
       name: RetryPaymentInputMessage
       title: ""
@@ -161,16 +130,6 @@ components:
         schemaFormat: application/vnd.apache.avro+json;version=1.9.0
         schema:
           $ref: "avro/RetryPaymentInput.avsc"
-    CapturePaymentInputMessage:
-      name: CapturePaymentInputMessage
-      title: ""
-      summary: ""
-      traits:
-        - $ref: '#/components/messageTraits/CommonHeaders'
-      payload:
-        schemaFormat: application/vnd.apache.avro+json;version=1.9.0
-        schema:
-          $ref: "avro/CapturePaymentInput.avsc"
     VoidPaymentInputMessage:
       name: VoidPaymentInputMessage
       title: ""
@@ -293,5 +252,4 @@ components:
             type: string
             description: Timestamp of when the event happened
             x-runtime-expression: $message.payload#{T(java.time.Instant).now().toString()}
-
 
