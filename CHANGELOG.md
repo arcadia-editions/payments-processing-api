@@ -3,3 +3,4 @@
 - added `README.md` describing Payments Processing as a bounded context
 - added `SUMMARY.md` with the business-purpose summary for event catalog generation
 - added this `CHANGE.log` to track documentation updates
+- added `EVENT_CATALOG.md` with an evergreen description of Payments Processing for event catalog publication

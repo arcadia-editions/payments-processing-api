@@ -1,5 +1,6 @@
 config {
     id "urn:com.arcadiaeditions:payments:processing"
+    version "0.1.0"
     title "Arcadia Editions - Payments Processing"
     basePackage "com.arcadiaeditions.payments.processing"
     persistence jpa
@@ -8,17 +9,31 @@ config {
         /** Generates an AsyncAPI v3 specification from this ZDL model. */
         ZDLToAsyncAPIPlugin {
             id "urn:com.arcadiaeditions:payments:processing:asyncapi"
+            applicationExtensions """
+            x-application-bindings:
+              x-principal: payments_processing
+              x-clientId: payments_processing
+              x-groupId: payments_processing
+            """
             schemaFormat avro
             idType integer
             idTypeFormat int64
             avroPackage com.arcadiaeditions.payments.processing.events.avro
             includeCloudEventsHeaders true
             includeKafkaCommonHeaders true
+            asyncapiOverlayFiles "https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-overlay.yml"
             targetFile "./asyncapi.yml"
         }
         ZDLToAsyncAPIClientPlugin {
             id "urn:com.arcadiaeditions:payments:processing:asyncapi:client"
+            applicationExtensions """
+            x-application-bindings:
+              x-principal: payments_processing
+              x-clientId: payments_processing
+              x-groupId: payments_processing
+            """
             title "Arcadia Editions - Payments Processing - AsyncAPI Client"
+            asyncapiOverlayFiles "https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-client-overlay.yml"
             targetFile "./asyncapi-client.yml"
         }
         /** Generates an OpenAPI 3.0 specification from this ZDL model. */

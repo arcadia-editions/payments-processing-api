@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: "Arcadia Editions - Payments Processing"
-  version: 0.0.1
+  version: 0.1.0
   description: "Arcadia Editions - Payments Processing"
   contact:
     email: email@domain.com
@@ -23,10 +23,10 @@ tags:
   - name: "PaymentsProcessing"
 
 
-paths:
+paths: {}
 
 components:
-  schemas: {}
+  schemas:
 
     Page:
       type: object
