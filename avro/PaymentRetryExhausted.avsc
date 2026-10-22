@@ -3,9 +3,6 @@
   "name" : "PaymentRetryExhausted",
   "namespace" : "com.arcadiaeditions.payments.processing.events.avro",
   "fields" : [ {
-    "name" : "paymentId",
-    "type" : [ "null", "string" ]
-  }, {
     "name" : "orderId",
     "type" : [ "null", "string" ]
   }, {

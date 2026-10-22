@@ -3,7 +3,7 @@ id: urn:com.arcadiaeditions:payments:processing:asyncapi
 
 info:
   title: Arcadia Editions - Payments Processing
-  version: 0.1.0
+  version: 0.0.1
   tags:
   - name: Default
   - name: PaymentsProcessing
@@ -20,84 +20,94 @@ x-application-bindings:
 defaultContentType: application/json
 
 channels:
-  payment-failed-event-v1:
-    address: payments-processing.payment-failed.event.avro.v1
-    x-visibility: global
-    messages:
-      RetryPaymentInputMessage:
-        $ref: "#/components/messages/RetryPaymentInputMessage"
-      PaymentFailedMessage:
-        $ref: "#/components/messages/PaymentFailedMessage"
-    x-traits:
-    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicS
-    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicRetained
-  payment-capture-failed-event-v1:
-    address: payments-processing.payment-capture-failed.event.avro.v1
-    x-visibility: global
-    messages:
-      VoidPaymentInputMessage:
-        $ref: "#/components/messages/VoidPaymentInputMessage"
-      PaymentCaptureFailedMessage:
-        $ref: "#/components/messages/PaymentCaptureFailedMessage"
-    x-traits:
-    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicS
-    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicRetained
-  payment-authorized-event-v1:
-    address: payments-processing.payment-authorized.event.avro.v1
-    x-visibility: global
-    messages:
-      PaymentAuthorizedMessage:
-        $ref: "#/components/messages/PaymentAuthorizedMessage"
-    x-traits:
-    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicS
-    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicRetained
-  payment-declined-event-v1:
-    address: payments-processing.payment-declined.event.avro.v1
-    x-visibility: global
-    messages:
-      PaymentDeclinedMessage:
-        $ref: "#/components/messages/PaymentDeclinedMessage"
-    x-traits:
-    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicS
-    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicRetained
   payment-retried-event-v1:
     address: payments-processing.payment-retried.event.avro.v1
-    x-visibility: global
     messages:
-      PaymentRetriedMessage:
-        $ref: "#/components/messages/PaymentRetriedMessage"
+      AuthorizePaymentInputCommand:
+        $ref: "#/components/messages/AuthorizePaymentInputCommand"
+      PaymentRetriedResponse:
+        $ref: "#/components/messages/PaymentRetriedResponse"
     x-traits:
     - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicS
     - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicRetained
+    x-visibility: global
+  payment-failed-event-v1:
+    address: payments-processing.payment-failed.event.avro.v1
+    messages:
+      RetryPaymentInputCommand:
+        $ref: "#/components/messages/RetryPaymentInputCommand"
+      PaymentFailedResponse:
+        $ref: "#/components/messages/PaymentFailedResponse"
+    x-traits:
+    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicS
+    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicRetained
+    x-visibility: global
+  payment-capture-failed-event-v1:
+    address: payments-processing.payment-capture-failed.event.avro.v1
+    messages:
+      VoidPaymentInputCommand:
+        $ref: "#/components/messages/VoidPaymentInputCommand"
+      PaymentCaptureFailedEvent:
+        $ref: "#/components/messages/PaymentCaptureFailedEvent"
+    x-traits:
+    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicS
+    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicRetained
+    x-visibility: global
+  payment-authorized-event-v1:
+    address: payments-processing.payment-authorized.event.avro.v1
+    messages:
+      PaymentAuthorizedResponse:
+        $ref: "#/components/messages/PaymentAuthorizedResponse"
+    x-traits:
+    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicS
+    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicRetained
+    x-visibility: global
+  payment-declined-event-v1:
+    address: payments-processing.payment-declined.event.avro.v1
+    messages:
+      PaymentDeclinedResponse:
+        $ref: "#/components/messages/PaymentDeclinedResponse"
+    x-traits:
+    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicS
+    - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicRetained
+    x-visibility: global
   payment-retry-exhausted-event-v1:
     address: payments-processing.payment-retry-exhausted.event.avro.v1
-    x-visibility: global
     messages:
-      PaymentRetryExhaustedMessage:
-        $ref: "#/components/messages/PaymentRetryExhaustedMessage"
+      PaymentRetryExhaustedResponse:
+        $ref: "#/components/messages/PaymentRetryExhaustedResponse"
     x-traits:
     - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicS
     - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicRetained
+    x-visibility: global
   payment-captured-event-v1:
     address: payments-processing.payment-captured.event.avro.v1
-    x-visibility: global
     messages:
-      PaymentCapturedMessage:
-        $ref: "#/components/messages/PaymentCapturedMessage"
+      PaymentCapturedEvent:
+        $ref: "#/components/messages/PaymentCapturedEvent"
     x-traits:
     - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicS
     - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicRetained
+    x-visibility: global
   payment-voided-event-v1:
     address: payments-processing.payment-voided.event.avro.v1
-    x-visibility: global
     messages:
-      PaymentVoidedMessage:
-        $ref: "#/components/messages/PaymentVoidedMessage"
+      PaymentVoidedResponse:
+        $ref: "#/components/messages/PaymentVoidedResponse"
     x-traits:
     - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicS
     - $ref: https://raw.githubusercontent.com/arcadia-editions/api-contract-commons/refs/heads/main/asyncapi-channel-traits.yml#/components/channelTraits/kafkaTopicRetained
+    x-visibility: global
 
 operations:
+  doAuthorizePayment:
+    action: receive
+    tags:
+    - name: PaymentsProcessing
+    channel:
+      $ref: "#/channels/payment-retried-event-v1"
+    traits:
+    - $ref: "#/components/operationTraits/clientIdAndPrincipal"
   doRetryPayment:
     action: receive
     tags:
@@ -181,8 +191,18 @@ operations:
 
 components:
   messages:
-    RetryPaymentInputMessage:
-      name: RetryPaymentInputMessage
+    AuthorizePaymentInputCommand:
+      name: AuthorizePaymentInputCommand
+      title: ""
+      summary: ""
+      traits:
+      - $ref: "#/components/messageTraits/CommonHeaders"
+      payload:
+        schemaFormat: application/vnd.apache.avro+json;version=1.9.0
+        schema:
+          $ref: avro/AuthorizePaymentInput.avsc
+    RetryPaymentInputCommand:
+      name: RetryPaymentInputCommand
       title: ""
       summary: ""
       traits:
@@ -191,18 +211,20 @@ components:
         schemaFormat: application/vnd.apache.avro+json;version=1.9.0
         schema:
           $ref: avro/RetryPaymentInput.avsc
-    VoidPaymentInputMessage:
-      name: VoidPaymentInputMessage
-      title: ""
-      summary: ""
+    VoidPaymentInputCommand:
+      name: VoidPaymentInputCommand
+      title: The payment is resolved by orderId (Payment.orderId is unique); fulfillment
+        events carry no paymentId.
+      summary: The payment is resolved by orderId (Payment.orderId is unique); fulfillment
+        events carry no paymentId.
       traits:
       - $ref: "#/components/messageTraits/CommonHeaders"
       payload:
         schemaFormat: application/vnd.apache.avro+json;version=1.9.0
         schema:
           $ref: avro/VoidPaymentInput.avsc
-    PaymentAuthorizedMessage:
-      name: PaymentAuthorizedMessage
+    PaymentAuthorizedResponse:
+      name: PaymentAuthorizedResponse
       title: ""
       summary: ""
       traits:
@@ -211,8 +233,8 @@ components:
         schemaFormat: application/vnd.apache.avro+json;version=1.9.0
         schema:
           $ref: avro/PaymentAuthorized.avsc
-    PaymentDeclinedMessage:
-      name: PaymentDeclinedMessage
+    PaymentDeclinedResponse:
+      name: PaymentDeclinedResponse
       title: ""
       summary: ""
       traits:
@@ -221,8 +243,8 @@ components:
         schemaFormat: application/vnd.apache.avro+json;version=1.9.0
         schema:
           $ref: avro/PaymentDeclined.avsc
-    PaymentFailedMessage:
-      name: PaymentFailedMessage
+    PaymentFailedResponse:
+      name: PaymentFailedResponse
       title: ""
       summary: ""
       traits:
@@ -231,8 +253,8 @@ components:
         schemaFormat: application/vnd.apache.avro+json;version=1.9.0
         schema:
           $ref: avro/PaymentFailed.avsc
-    PaymentRetriedMessage:
-      name: PaymentRetriedMessage
+    PaymentRetriedResponse:
+      name: PaymentRetriedResponse
       title: ""
       summary: ""
       traits:
@@ -241,8 +263,8 @@ components:
         schemaFormat: application/vnd.apache.avro+json;version=1.9.0
         schema:
           $ref: avro/PaymentRetried.avsc
-    PaymentRetryExhaustedMessage:
-      name: PaymentRetryExhaustedMessage
+    PaymentRetryExhaustedResponse:
+      name: PaymentRetryExhaustedResponse
       title: ""
       summary: ""
       traits:
@@ -251,8 +273,8 @@ components:
         schemaFormat: application/vnd.apache.avro+json;version=1.9.0
         schema:
           $ref: avro/PaymentRetryExhausted.avsc
-    PaymentCapturedMessage:
-      name: PaymentCapturedMessage
+    PaymentCapturedEvent:
+      name: PaymentCapturedEvent
       title: ""
       summary: ""
       traits:
@@ -261,8 +283,8 @@ components:
         schemaFormat: application/vnd.apache.avro+json;version=1.9.0
         schema:
           $ref: avro/PaymentCaptured.avsc
-    PaymentCaptureFailedMessage:
-      name: PaymentCaptureFailedMessage
+    PaymentCaptureFailedEvent:
+      name: PaymentCaptureFailedEvent
       title: ""
       summary: ""
       traits:
@@ -271,8 +293,8 @@ components:
         schemaFormat: application/vnd.apache.avro+json;version=1.9.0
         schema:
           $ref: avro/PaymentCaptureFailed.avsc
-    PaymentVoidedMessage:
-      name: PaymentVoidedMessage
+    PaymentVoidedResponse:
+      name: PaymentVoidedResponse
       title: ""
       summary: ""
       traits:
