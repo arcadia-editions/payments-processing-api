@@ -111,16 +111,19 @@ input VoidPaymentInput {
 service PaymentsProcessingService for (Payment) {
 
     @asyncapi(api: OrdersCheckoutApi, channel: "order-created-event-v1")
-    @asyncapi(channel: "payment-retried-event-v1")
-    @transition(to: AUTHORIZATION_REQUESTED)
+    @transition(to: [AUTHORIZED, DECLINED, FAILED])
     authorizePayment(AuthorizePaymentInput) Payment withEvents [PaymentAuthorized | PaymentDeclined | PaymentFailed]
+
+    @asyncapi(channel: "payment-retried-event-v1")
+    @transition(from: FAILED, to: [AUTHORIZED, DECLINED, FAILED])
+    reauthorizePayment(RetryPaymentInput) Payment withEvents [PaymentAuthorized | PaymentDeclined | PaymentFailed]
 
     @asyncapi(channel: "payment-failed-event-v1")
     @transition(from: FAILED, to: [FAILED, RETRY_EXHAUSTED])
     retryPayment(RetryPaymentInput) Payment withEvents [PaymentRetried | PaymentRetryExhausted]
 
     @asyncapi(api: FulfillmentShippingApi, channel: "fulfillment-scheduled-event-v1")
-    @transition(from: AUTHORIZED, to: CAPTURED)
+    @transition(from: AUTHORIZED, to: [CAPTURED, CAPTURE_FAILED])
     capturePayment(CapturePaymentInput) Payment withEvents [PaymentCaptured | PaymentCaptureFailed]
 
     @asyncapi(api: FulfillmentShippingApi, channel: "fulfillment-failed-event-v1")
