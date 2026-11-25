@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "ReauthorizePaymentInput",
+  "namespace" : "com.arcadiaeditions.payments.processing.events.avro",
+  "fields" : [ {
+    "name" : "orderId",
+    "type" : "string",
+    "doc" : ""
+  }, {
+    "name" : "attemptCount",
+    "type" : "int",
+    "doc" : "PaymentRetried.attemptCount: equals the failed attempt; reauthorize increments it."
+  } ]
+}

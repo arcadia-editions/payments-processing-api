@@ -4,6 +4,11 @@
   "namespace" : "com.arcadiaeditions.payments.processing.events.avro",
   "fields" : [ {
     "name" : "orderId",
-    "type" : "string"
+    "type" : "string",
+    "doc" : ""
+  }, {
+    "name" : "attemptCount",
+    "type" : "int",
+    "doc" : "PaymentFailed.attemptCount: the attempt that failed."
   } ]
 }

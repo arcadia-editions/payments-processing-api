@@ -1,0 +1,21 @@
+{
+  "type" : "record",
+  "name" : "PaymentVoidFailed",
+  "namespace" : "com.arcadiaeditions.payments.processing.events.avro",
+  "fields" : [ {
+    "name" : "orderId",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "customerId",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "providerReference",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "reason",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "failedAt",
+    "type" : [ "null", "string" ]
+  } ]
+}
