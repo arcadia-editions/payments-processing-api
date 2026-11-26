@@ -103,7 +103,7 @@ channels:
     x-visibility: global
 
 operations:
-  doReauthorizePayment:
+  doPaymentRetried:
     action: receive
     tags:
     - name: PaymentsProcessing
@@ -111,7 +111,7 @@ operations:
       $ref: "#/channels/payment-retried-event-v1"
     traits:
     - $ref: "#/components/operationTraits/clientIdAndPrincipal"
-  doRetryPayment:
+  doPaymentFailed:
     action: receive
     tags:
     - name: PaymentsProcessing
@@ -119,7 +119,7 @@ operations:
       $ref: "#/channels/payment-failed-event-v1"
     traits:
     - $ref: "#/components/operationTraits/clientIdAndPrincipal"
-  doVoidPayment:
+  doPaymentCaptureFailed:
     action: receive
     tags:
     - name: PaymentsProcessing
