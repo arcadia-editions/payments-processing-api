@@ -3,7 +3,7 @@ id: urn:com.arcadiaeditions:payments:processing:asyncapi:client
 
 info:
   title: Arcadia Editions - Payments Processing - AsyncAPI Client
-  version: "0.2.1"
+  version: "0.2.2"
   description: Consumed AsyncAPI channels for Arcadia Editions - Payments Processing.
 
 x-application-bindings:
