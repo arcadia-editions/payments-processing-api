@@ -23,8 +23,6 @@ channels:
   payment-retried-event-v1:
     address: payments-processing.payment-retried.event.avro.v1
     messages:
-      ReauthorizePaymentInputCommand:
-        $ref: "#/components/messages/ReauthorizePaymentInputCommand"
       PaymentRetriedResponse:
         $ref: "#/components/messages/PaymentRetriedResponse"
     x-traits:
@@ -34,8 +32,6 @@ channels:
   payment-failed-event-v1:
     address: payments-processing.payment-failed.event.avro.v1
     messages:
-      RetryPaymentInputCommand:
-        $ref: "#/components/messages/RetryPaymentInputCommand"
       PaymentFailedResponse:
         $ref: "#/components/messages/PaymentFailedResponse"
     x-traits:
@@ -45,8 +41,6 @@ channels:
   payment-capture-failed-event-v1:
     address: payments-processing.payment-capture-failed.event.avro.v1
     messages:
-      VoidPaymentInputCommand:
-        $ref: "#/components/messages/VoidPaymentInputCommand"
       PaymentCaptureFailedEvent:
         $ref: "#/components/messages/PaymentCaptureFailedEvent"
     x-traits:
@@ -208,38 +202,6 @@ operations:
 
 components:
   messages:
-    ReauthorizePaymentInputCommand:
-      name: ReauthorizePaymentInputCommand
-      title: ""
-      summary: ""
-      traits:
-      - $ref: "#/components/messageTraits/CommonHeaders"
-      payload:
-        schemaFormat: application/vnd.apache.avro+json;version=1.9.0
-        schema:
-          $ref: avro/ReauthorizePaymentInput.avsc
-    RetryPaymentInputCommand:
-      name: RetryPaymentInputCommand
-      title: ""
-      summary: ""
-      traits:
-      - $ref: "#/components/messageTraits/CommonHeaders"
-      payload:
-        schemaFormat: application/vnd.apache.avro+json;version=1.9.0
-        schema:
-          $ref: avro/RetryPaymentInput.avsc
-    VoidPaymentInputCommand:
-      name: VoidPaymentInputCommand
-      title: The payment is resolved by orderId (Payment.orderId is unique); fulfillment
-        events carry no paymentId.
-      summary: The payment is resolved by orderId (Payment.orderId is unique); fulfillment
-        events carry no paymentId.
-      traits:
-      - $ref: "#/components/messageTraits/CommonHeaders"
-      payload:
-        schemaFormat: application/vnd.apache.avro+json;version=1.9.0
-        schema:
-          $ref: avro/VoidPaymentInput.avsc
     PaymentAuthorizedResponse:
       name: PaymentAuthorizedResponse
       title: ""
